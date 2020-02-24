@@ -1,14 +1,12 @@
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
-    target: 'electron-main',
+const baseConfig= {
     mode: 'development',
-    entry: {
-        main: path.join(__dirname, 'src/index.ts'),
-    },
-    output: {
-        path: path.join(__dirname, 'assets/'),
-        filename: '[name].js'
+    watch: true,
+    node: {
+        __dirname: false,
+        __filename: false,
     },
     module: {
         rules: [
@@ -28,7 +26,7 @@ module.exports = {
                 test: /\.(ttf|eot|svg|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'file-loader',
                 options: {
-                    publicPath: 'js/'
+                    publicPath: './'
                 }
             },
             {
@@ -44,3 +42,34 @@ module.exports = {
         hints: false
     }
 }
+
+module.exports = [
+    {
+        ...baseConfig,
+        target: 'electron-main',
+        entry: {
+            main: path.join(__dirname, 'src/browser/index.ts'),
+        },
+        output: {
+            path: path.join(__dirname, 'assets/browser/'),
+            filename: '[name].js'
+        },
+    },
+    {
+        ...baseConfig,
+        target: 'electron-renderer',
+        entry: {
+            bundle: path.join(__dirname, 'src/renderer/index.tsx'),
+        },
+        output: {
+            path: path.join(__dirname, 'assets/renderer/'),
+            filename: '[name].js'
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                title: 'sample',
+                template: 'src/renderer/index.html'
+            })
+        ]
+    }
+]
