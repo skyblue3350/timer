@@ -83,6 +83,7 @@ export default class App extends React.Component<Props, State> {
 
     start() {
         this.timer = setInterval(() => this.countDown(), 1000)
+        this.forceUpdate()
     }
 
     stop() {
@@ -103,6 +104,8 @@ export default class App extends React.Component<Props, State> {
     }
 
     addPreset() {
+        if (this.state.presets.includes(this.timeToSec(this.state.time))) return
+
         this.setState({
             presets: [
                 ...this.state.presets,
@@ -170,7 +173,7 @@ export default class App extends React.Component<Props, State> {
                         <Button onClick={() => this.start()} disabled={this.isRunning() || this.timeToSec(this.state.time) <= 0} content='Start' color='green' />
                         <Button onClick={() => this.stop()} disabled={!this.isRunning()} content='Stop' color='orange' />
                         <Button onClick={() => this.reset()} disabled={this.isRunning() || this.timeToSec(this.state.time) <= 0} content='Reset' color='red' />
-                        <Button onClick={() => this.addPreset()} disabled={this.timeToSec(this.state.time) <= 0} content='Add Preset' color='blue'/>
+                        <Button onClick={() => this.addPreset()} disabled={this.isRunning() || this.timeToSec(this.state.time) <= 0} content='Add Preset' color='blue'/>
                     </Button.Group>
                 </Grid.Row>
 
@@ -186,8 +189,17 @@ export default class App extends React.Component<Props, State> {
                                                 {`${time.hour}:${('0' + time.min).slice(-2)}:${('0' + time.sec).slice(-2)}`}
                                             </Table.Cell>
                                             <Table.Cell textAlign='right'>
-                                                <Button onClick={() => this.setPreset(index)} color='blue' circular icon={{name: 'add'}} />
-                                                <Button onClick={() => this.removePreset(index)} color='red' circular icon={{name: 'minus'}} />
+                                                <Button
+                                                    onClick={() => this.setPreset(index)}
+                                                    disabled={this.isRunning()}
+                                                    icon={{name: 'add'}}
+                                                    color='blue'
+                                                    circular />
+                                                <Button
+                                                    onClick={() => this.removePreset(index)}
+                                                    icon={{name: 'minus'}}
+                                                    color='red'
+                                                    circular />
                                             </Table.Cell>
                                         </Table.Row>
                                     )
