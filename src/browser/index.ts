@@ -26,7 +26,7 @@ class TimerApp {
             y: this.mainWindowState.y,
             width: this.mainWindowState.width,
             height: this.mainWindowState.height,
-            minWidth: 500,
+            minWidth: 450,
             minHeight: 250,
             acceptFirstMouse: true,
             frame: false,
