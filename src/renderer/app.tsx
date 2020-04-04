@@ -6,7 +6,11 @@ export interface Props {
 
 export interface State {
     presets: number[]
-    time: number
+    time: {
+        hour: number
+        min: number
+        sec: number
+    }
 }
 
 export default class App extends React.Component<Props, State> {
@@ -17,7 +21,11 @@ export default class App extends React.Component<Props, State> {
 
         this.state = {
             presets: [],
-            time: 0,
+            time: {
+                hour: 0,
+                min: 0,
+                sec: 0,
+            },
         }
     }
 
@@ -34,15 +42,15 @@ export default class App extends React.Component<Props, State> {
                 </Grid.Row>
 
                 <Grid.Row columns={3}>
-                    {['hour', 'min', 'sec'].map((className) => {
+                    {Object.entries(this.state.time).map(([key, value]: [string, number]) => {
                         return <Grid.Column
-                            key={className}
-                            className={className}
+                            key={key}
+                            className={key}
                             textAlign='center'
                             verticalAlign='middle'
                             style={{fontSize: '25vh', lineHeight: '1em'}}
                             onKeyPress={(e: Event) => console.log(e)}>
-                            00
+                            {('0' + value).slice(-2)}
                         </Grid.Column>
                     })}
                 </Grid.Row>
@@ -56,9 +64,10 @@ export default class App extends React.Component<Props, State> {
                 </Grid.Row>
 
                 <Grid.Row columns={1} centered>
-                    <Button.Group widths={3}>
+                    <Button.Group widths={4}>
                         <Button content='Start' color='green' />
-                        <Button content='Stop' color='red' />
+                        <Button content='Stop' color='orange' />
+                        <Button content='Reset' color='red' />
                         <Button content='Add Preset' color='blue'/>
                     </Button.Group>
                 </Grid.Row>
