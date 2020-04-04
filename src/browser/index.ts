@@ -21,9 +21,10 @@ class TimerApp {
             width: 800,
             height: 400,
             minWidth: 500,
-            minHeight: 200,
+            minHeight: 250,
             acceptFirstMouse: true,
-            titleBarStyle: 'hidden',
+            frame: false,
+            opacity: 0.96,
             webPreferences: {
                 nodeIntegration: true
             }

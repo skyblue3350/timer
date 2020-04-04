@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <style>
+      body {
+        -webkit-app-region: drag;
+        overflow-y: hidden;
+      }
+      .button {
+        -webkit-app-region: no-drag;
+      }
       .row {
-        /* padding-top: 0 !important; */
         padding-bottom: 0 !important;
       }
       .hour::after, .min::after, .sec::after{
