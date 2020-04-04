@@ -1,5 +1,5 @@
 {
-  "name": "electron-template-ts-react",
+  "name": "timer",
   "version": "1.0.0",
   "description": "",
   "main": "assets/browser/main.js",
@@ -7,14 +7,34 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ./",
     "build:dev": "webpack --config webpack.dev.config.js",
-    "build:prod": "webpack --config webpack.prod.config.js"
+    "build:prod": "webpack --config webpack.prod.config.js",
+    "build:app": "electron-builder"
+  },
+  "build": {
+    "appId": "com.github.skyblue3350.timer",
+    "icon": "./src/icon.png",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dmg"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "linux": {
+      "target": ["deb", "zip"]
+    }
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/skyblue3350/electron-template-ts-react.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "skyblue3350 <skyblue3350@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/skyblue3350/electron-template-ts-react/issues"
@@ -22,7 +42,6 @@
   "homepage": "https://github.com/skyblue3350/electron-template-ts-react#readme",
   "dependencies": {
     "css-loader": "^3.4.2",
-    "electron": "^8.2.0",
     "electron-store": "^5.1.1",
     "electron-window-state": "^5.0.3",
     "file-loader": "^5.0.2",
@@ -38,10 +57,12 @@
     "webpack-cli": "^3.3.11"
   },
   "devDependencies": {
+    "electron": "^8.2.0",
     "@types/node": "^13.7.1",
     "@types/react": "^16.9.20",
     "@types/react-dom": "^16.9.5",
     "@types/semantic-ui": "^2.2.7",
-    "@types/webpack": "^4.41.6"
+    "@types/webpack": "^4.41.6",
+    "electron-builder": "^22.4.1"
   }
 }
