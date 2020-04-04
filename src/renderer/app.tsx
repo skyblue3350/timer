@@ -77,6 +77,10 @@ export default class App extends React.Component<Props, State> {
 
     }
 
+    isRunning() {
+        return this.timer != null
+    }
+
     start() {
         this.timer = setInterval(() => this.countDown(), 1000)
     }
@@ -155,9 +159,9 @@ export default class App extends React.Component<Props, State> {
 
                 <Grid.Row columns={1} centered>
                     <Button.Group widths={4}>
-                        <Button onClick={() => this.start()} disabled={this.timeToSec(this.state.time) <= 0} content='Start' color='green' />
-                        <Button onClick={() => this.stop()} disabled={this.timer == null} content='Stop' color='orange' />
-                        <Button onClick={() => this.reset()} disabled={this.timeToSec(this.state.time) <= 0} content='Reset' color='red' />
+                        <Button onClick={() => this.start()} disabled={this.isRunning() || this.timeToSec(this.state.time) <= 0} content='Start' color='green' />
+                        <Button onClick={() => this.stop()} disabled={!this.isRunning()} content='Stop' color='orange' />
+                        <Button onClick={() => this.reset()} disabled={this.isRunning() || this.timeToSec(this.state.time) <= 0} content='Reset' color='red' />
                         <Button onClick={() => this.addPreset()} disabled={this.timeToSec(this.state.time) <= 0} content='Add Preset' color='blue'/>
                     </Button.Group>
                 </Grid.Row>
