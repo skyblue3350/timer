@@ -57,6 +57,12 @@ export default class App extends React.Component<Props, State> {
         this.setState({time: this.secToTime(sec)})
     }
 
+    reset() {
+        this.setState({
+            time: {hour: 0, min: 0, sec: 0},
+        })
+    }
+
     addPreset() {
         this.setState({
             presets: [
@@ -117,7 +123,7 @@ export default class App extends React.Component<Props, State> {
                     <Button.Group widths={4}>
                         <Button content='Start' color='green' />
                         <Button content='Stop' color='orange' />
-                        <Button content='Reset' color='red' />
+                        <Button onClick={() => this.reset()} content='Reset' color='red' />
                         <Button onClick={() => this.addPreset()} content='Add Preset' color='blue'/>
                     </Button.Group>
                 </Grid.Row>
