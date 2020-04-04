@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button, Grid, Progress, Table } from 'semantic-ui-react';
+import { shell } from 'electron';
 
 type TimeLabel = 'hour' | 'min' | 'sec'
 const TimeLabel = ['hour', 'min', 'sec']
@@ -17,7 +18,7 @@ export interface State {
 }
 
 export default class App extends React.Component<Props, State> {
-    timer: void
+    timer: NodeJS.Timeout | null
 
     constructor(props: Props) {
         super(props)
@@ -30,6 +31,8 @@ export default class App extends React.Component<Props, State> {
                 sec: 0,
             },
         }
+
+        this.timer = null
     }
 
     timeToSec(time: State["time"]) {
@@ -57,10 +60,42 @@ export default class App extends React.Component<Props, State> {
         this.setState({time: this.secToTime(sec)})
     }
 
+    countDown() {
+        const count = this.timeToSec(this.state.time) - 1
+
+        if (count <= 0) {
+            this.setState({
+                time: this.secToTime(0)
+            })
+            this.stop()
+            this.finish()
+        } else {
+            this.setState({
+                time: this.secToTime(count)
+            })
+        }
+
+    }
+
+    start() {
+        this.timer = setInterval(() => this.countDown(), 1000)
+    }
+
+    stop() {
+        clearInterval(this.timer!)
+        this.timer = null
+        this.forceUpdate()
+    }
+
     reset() {
         this.setState({
             time: {hour: 0, min: 0, sec: 0},
         })
+    }
+
+    finish() {
+        shell.beep()
+        new Notification('Time is up!')
     }
 
     addPreset() {
@@ -85,7 +120,6 @@ export default class App extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        console.log(this.state.presets)
         return (
             <Grid padded={false}>
                 <Grid.Row columns={1} centered>
@@ -121,10 +155,10 @@ export default class App extends React.Component<Props, State> {
 
                 <Grid.Row columns={1} centered>
                     <Button.Group widths={4}>
-                        <Button content='Start' color='green' />
-                        <Button content='Stop' color='orange' />
-                        <Button onClick={() => this.reset()} content='Reset' color='red' />
-                        <Button onClick={() => this.addPreset()} content='Add Preset' color='blue'/>
+                        <Button onClick={() => this.start()} disabled={this.timeToSec(this.state.time) <= 0} content='Start' color='green' />
+                        <Button onClick={() => this.stop()} disabled={this.timer == null} content='Stop' color='orange' />
+                        <Button onClick={() => this.reset()} disabled={this.timeToSec(this.state.time) <= 0} content='Reset' color='red' />
+                        <Button onClick={() => this.addPreset()} disabled={this.timeToSec(this.state.time) <= 0} content='Add Preset' color='blue'/>
                     </Button.Group>
                 </Grid.Row>
 
@@ -134,15 +168,17 @@ export default class App extends React.Component<Props, State> {
                             <Table.Body>
                                 {this.state.presets.map((preset: number, index: number) => {
                                     const time = this.secToTime(preset)
-                                    return <Table.Row>
-                                        <Table.Cell>
-                                            {`${time.hour}:${('0' + time.min).slice(-2)}:${('0' + time.sec).slice(-2)}`}
-                                        </Table.Cell>
-                                        <Table.Cell textAlign='right'>
-                                            <Button onClick={() => this.setPreset(index)} color='blue' circular icon={{name: 'add'}} />
-                                            <Button onClick={() => this.removePreset(index)} color='red' circular icon={{name: 'minus'}} />
-                                        </Table.Cell>
-                                    </Table.Row>
+                                    return (
+                                        <Table.Row key={index}>
+                                            <Table.Cell>
+                                                {`${time.hour}:${('0' + time.min).slice(-2)}:${('0' + time.sec).slice(-2)}`}
+                                            </Table.Cell>
+                                            <Table.Cell textAlign='right'>
+                                                <Button onClick={() => this.setPreset(index)} color='blue' circular icon={{name: 'add'}} />
+                                                <Button onClick={() => this.removePreset(index)} color='red' circular icon={{name: 'minus'}} />
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    )
                                 })}
                             </Table.Body>
                         </Table>
