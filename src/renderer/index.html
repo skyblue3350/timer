@@ -3,6 +3,24 @@
   <head>
     <meta charset="UTF-8">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      .row {
+        /* padding-top: 0 !important; */
+        padding-bottom: 0 !important;
+      }
+      .hour::after, .min::after, .sec::after{
+        font-size: 5vh;
+      }
+      .hour::after {
+        content: 'h';
+      }
+      .min::after {
+        content: 'min';
+      }
+      .sec::after {
+        content: 's';
+      }
+    </style>
   </head>
 
   <body>
