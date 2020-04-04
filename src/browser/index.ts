@@ -27,7 +27,8 @@ class TimerApp {
             opacity: 0.96,
             webPreferences: {
                 nodeIntegration: true
-            }
+            },
+            alwaysOnTop: true,
         });
 
         this.mainWindow.loadURL(this.mainURL);
