@@ -1,6 +1,7 @@
 import { app, App, BrowserWindow } from 'electron'
 import windowStateKeeper from 'electron-window-state'
 import Store from 'electron-store'
+import icon from '../icon.png'
 
 class TimerApp {
     mainWindow: BrowserWindow | null = null
@@ -25,6 +26,7 @@ class TimerApp {
         this.mainWindowState = windowStateKeeper({})
 
         this.mainWindow = new BrowserWindow({
+            icon: `${__dirname}/${icon}`,
             x: this.mainWindowState.x,
             y: this.mainWindowState.y,
             width: this.mainWindowState.width,
