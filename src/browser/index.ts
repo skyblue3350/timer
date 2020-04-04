@@ -1,7 +1,7 @@
 import { app, App, BrowserWindow } from 'electron'
 import windowStateKeeper from 'electron-window-state'
 import Store from 'electron-store'
-import icon from '../icon.png'
+import icon from './../icon.png'
 
 class TimerApp {
     mainWindow: BrowserWindow | null = null
