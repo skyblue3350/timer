@@ -8,7 +8,7 @@
     "start": "electron ./",
     "build:dev": "webpack --config webpack.dev.config.js",
     "build:prod": "webpack --config webpack.prod.config.js",
-    "build:app": "electron-builder"
+    "build:app": "webpack --config webpack.prod.config.js && electron-builder"
   },
   "build": {
     "appId": "com.github.skyblue3350.timer",
