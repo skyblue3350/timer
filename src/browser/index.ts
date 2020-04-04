@@ -1,6 +1,6 @@
 import { app, App, BrowserWindow } from 'electron';
 
-class SampleApp {
+class TimerApp {
     private mainWindow: BrowserWindow | null = null;
     private app: App;
     private mainURL: string = `file://${__dirname}/../renderer/index.html`
@@ -51,4 +51,4 @@ class SampleApp {
     }
 }
 
-const MyApp: SampleApp = new SampleApp(app)
+const MyApp: TimerApp = new TimerApp(app)
