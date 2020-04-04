@@ -1,17 +1,20 @@
 import { app, App, BrowserWindow } from 'electron'
 import windowStateKeeper from 'electron-window-state'
+import Store from 'electron-store'
 
 class TimerApp {
     mainWindow: BrowserWindow | null = null
     app: App
     mainURL: string = `file://${__dirname}/../renderer/index.html`
     mainWindowState!: windowStateKeeper.State
+    store: Store<any>
 
     constructor(app: App) {
         this.app = app
         this.app.on('window-all-closed', this.onWindowAllClosed.bind(this))
         this.app.on('ready', this.create.bind(this))
         this.app.on('activate', this.onActivated.bind(this))
+        this.store = new Store()
     }
 
     private onWindowAllClosed() {
@@ -30,11 +33,11 @@ class TimerApp {
             minHeight: 250,
             acceptFirstMouse: true,
             frame: false,
-            opacity: 0.96,
+            opacity: this.store.get('opacity', 0.96),
             webPreferences: {
                 nodeIntegration: true
             },
-            alwaysOnTop: true,
+            alwaysOnTop: this.store.get('alwaysOnTop', true),
         })
 
         this.mainWindow.loadURL(this.mainURL)
