@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Button, Grid, Progress, Table } from 'semantic-ui-react';
 
+type TimeLabel = 'hour' | 'min' | 'sec'
+const TimeLabel = ['hour', 'min', 'sec']
+
 export interface Props {
 }
 
@@ -29,15 +32,41 @@ export default class App extends React.Component<Props, State> {
         }
     }
 
+    timeToSec(time: State["time"]) {
+        return time.hour * 3600 + time.min * 60 + time.sec
+    }
+
+    secToTime(sec: number): State["time"] {
+        return {
+            hour: sec / 3600 | 0,
+            min: sec % 3600 / 60 | 0,
+            sec: sec % 60,
+        }
+    }
+
+    addOne(name: TimeLabel) {
+        let sec = this.timeToSec(this.state.time)
+        sec += name == 'hour'? 3600 : name == 'min'? 60 : 1
+        this.setState({time: this.secToTime(sec)})
+    }
+
+    subOne(name: TimeLabel) {
+        let sec = this.timeToSec(this.state.time)
+        sec -= name == 'hour'? 3600 : name == 'min'? 60 : 1
+        sec = sec < 0? 0 : sec
+        this.setState({time: this.secToTime(sec)})
+    }
+
     render(): JSX.Element {
+        console.log(this.state.time)
         return (
             <Grid padded={false}>
                 <Grid.Row columns={1} centered>
                     <Progress percent={100} color='green' size='tiny' attached='bottom'/>
                     <Button.Group widths={3}>
-                        <Button content='+'/>
-                        <Button content='+'/>
-                        <Button content='+'/>
+                        {Object.keys(this.state.time).map((key) => {
+                            return <Button key={key} onClick={() => this.addOne(key as TimeLabel)} content='+' />
+                        })}
                     </Button.Group>
                 </Grid.Row>
 
@@ -57,9 +86,9 @@ export default class App extends React.Component<Props, State> {
 
                 <Grid.Row columns={1} centered>
                     <Button.Group widths={3}>
-                        <Button content='-'/>
-                        <Button content='-'/>
-                        <Button content='-'/>
+                        {Object.keys(this.state.time).map((key) => {
+                            return <Button key={key} onClick={() => this.subOne(key as TimeLabel)} content='-' />
+                        })}
                     </Button.Group>
                 </Grid.Row>
 
