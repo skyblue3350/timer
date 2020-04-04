@@ -67,7 +67,7 @@ module.exports = [
         },
         plugins: [
             new HtmlWebpackPlugin({
-                title: 'sample',
+                title: 'Timer',
                 template: 'src/renderer/index.html'
             })
         ]
