@@ -1,7 +1,8 @@
+const webpack = require('webpack');
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const baseConfig= {
+const baseDevConfig= {
     mode: 'development',
     watch: true,
     node: {
@@ -40,12 +41,19 @@ const baseConfig= {
     },
     performance: {
         hints: false
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                mode: JSON.stringify('development'),
+            }
+        })
+    ]
 }
 
 module.exports = [
     {
-        ...baseConfig,
+        ...baseDevConfig,
         target: 'electron-main',
         entry: {
             main: path.join(__dirname, 'src/browser/index.ts'),
@@ -56,7 +64,7 @@ module.exports = [
         },
     },
     {
-        ...baseConfig,
+        ...baseDevConfig,
         target: 'electron-renderer',
         entry: {
             bundle: path.join(__dirname, 'src/renderer/index.tsx'),

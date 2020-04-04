@@ -43,9 +43,11 @@ class TimerApp {
         this.mainWindow.loadURL(this.mainURL)
         this.mainWindowState.manage(this.mainWindow)
 
-        this.mainWindow.webContents.openDevTools({
-            mode: 'detach',
-        })
+        if (process.env.mode == 'development') {
+            this.mainWindow.webContents.openDevTools({
+                mode: 'detach',
+            })
+        }
 
         this.mainWindow.on('closed', () => {
             this.mainWindow = null
