@@ -130,7 +130,11 @@ export default class App extends React.Component<Props, State> {
                     <Progress percent={100} color='green' size='tiny' attached='bottom'/>
                     <Button.Group widths={3}>
                         {Object.keys(this.state.time).map((key) => {
-                            return <Button key={key} onClick={() => this.addOne(key as TimeLabel)} content='+' />
+                            return <Button
+                                        key={key}
+                                        onClick={() => this.addOne(key as TimeLabel)}
+                                        disabled={this.isRunning()}
+                                        content='+' />
                         })}
                     </Button.Group>
                 </Grid.Row>
@@ -152,7 +156,11 @@ export default class App extends React.Component<Props, State> {
                 <Grid.Row columns={1} centered>
                     <Button.Group widths={3}>
                         {Object.keys(this.state.time).map((key) => {
-                            return <Button key={key} onClick={() => this.subOne(key as TimeLabel)} content='-' />
+                            return <Button
+                                        key={key}
+                                        onClick={() => this.subOne(key as TimeLabel)}
+                                        disabled={this.isRunning()}
+                                        content='-' />
                         })}
                     </Button.Group>
                 </Grid.Row>
