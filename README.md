@@ -1,1 +1,3 @@
-# electron-template-ts-react
+# Timer
+Electron製のタイマー  
+React+Semanti UI
