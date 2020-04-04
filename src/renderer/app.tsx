@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button, Grid, Progress, Table } from 'semantic-ui-react';
 import { shell } from 'electron';
+import Store from 'electron-store'
 
 type TimeLabel = 'hour' | 'min' | 'sec'
 const TimeLabel = ['hour', 'min', 'sec']
@@ -20,12 +21,15 @@ export interface State {
 
 export default class App extends React.Component<Props, State> {
     timer: NodeJS.Timeout | null
+    private store: Store<any>
 
     constructor(props: Props) {
         super(props)
+        this.timer = null
+        this.store = new Store()
 
         this.state = {
-            presets: [],
+            presets: this.store.get('presets', []),
             time: {
                 hour: 0,
                 min: 0,
@@ -34,7 +38,7 @@ export default class App extends React.Component<Props, State> {
             targetTime: 0
         }
 
-        this.timer = null
+
     }
 
     timeToSec(time: State["time"]) {
@@ -112,12 +116,13 @@ export default class App extends React.Component<Props, State> {
     addPreset() {
         if (this.state.presets.includes(this.timeToSec(this.state.time))) return
 
-        this.setState({
-            presets: [
-                ...this.state.presets,
-                this.timeToSec(this.state.time)
-            ]
-        })
+        const presets = [
+            ...this.state.presets,
+            this.timeToSec(this.state.time)
+        ].sort((a, b) => a - b)
+
+        this.store.set('presets', presets)
+        this.setState({presets})
     }
 
     setPreset(index: number) {
@@ -127,9 +132,10 @@ export default class App extends React.Component<Props, State> {
     }
 
     removePreset(index: number) {
-        this.setState({
-            presets: this.state.presets.filter((v, i) => i != index)
-        })
+        const presets = this.state.presets.filter((v, i) => i != index)
+
+        this.store.set('presets', presets)
+        this.setState({presets})
     }
 
     render(): JSX.Element {
@@ -188,7 +194,7 @@ export default class App extends React.Component<Props, State> {
                     </Button.Group>
                 </Grid.Row>
 
-                <Grid.Row>
+                <Grid.Row className='presets'>
                     <Grid.Column>
                         <Table striped unstackable>
                             <Table.Body>

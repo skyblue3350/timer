@@ -26,6 +26,14 @@
       .sec::after {
         content: 's';
       }
+      .presets {
+        height: calc(100vh - 250px) !important;
+        overflow-y: auto;
+        -webkit-app-region: no-drag;
+      }
+      .presets::-webkit-scrollbar {
+        display: none;
+      }
     </style>
   </head>
 
