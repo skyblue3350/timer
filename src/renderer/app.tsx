@@ -15,6 +15,7 @@ export interface State {
         min: number
         sec: number
     }
+    targetTime: number
 }
 
 export default class App extends React.Component<Props, State> {
@@ -30,6 +31,7 @@ export default class App extends React.Component<Props, State> {
                 min: 0,
                 sec: 0,
             },
+            targetTime: 0
         }
 
         this.timer = null
@@ -83,13 +85,17 @@ export default class App extends React.Component<Props, State> {
 
     start() {
         this.timer = setInterval(() => this.countDown(), 1000)
-        this.forceUpdate()
+        this.setState({
+            targetTime: this.timeToSec(this.state.time)
+        })
     }
 
     stop() {
         clearInterval(this.timer!)
         this.timer = null
-        this.forceUpdate()
+        this.setState({
+            targetTime: 0
+        })
     }
 
     reset() {
@@ -130,7 +136,12 @@ export default class App extends React.Component<Props, State> {
         return (
             <Grid padded={false}>
                 <Grid.Row columns={1} centered>
-                    <Progress percent={100} color='green' size='tiny' attached='bottom'/>
+                    <Progress
+                        total={this.state.targetTime}
+                        value={this.state.targetTime - this.timeToSec(this.state.time)}
+                        color='green'
+                        size='tiny'
+                        attached='bottom'/>
                     <Button.Group widths={3}>
                         {Object.keys(this.state.time).map((key) => {
                             return <Button
