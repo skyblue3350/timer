@@ -1,25 +1,31 @@
-import { app, App, BrowserWindow } from 'electron';
+import { app, App, BrowserWindow } from 'electron'
+import windowStateKeeper from 'electron-window-state'
 
 class TimerApp {
-    private mainWindow: BrowserWindow | null = null;
-    private app: App;
-    private mainURL: string = `file://${__dirname}/../renderer/index.html`
+    mainWindow: BrowserWindow | null = null
+    app: App
+    mainURL: string = `file://${__dirname}/../renderer/index.html`
+    mainWindowState!: windowStateKeeper.State
 
     constructor(app: App) {
-        this.app = app;
+        this.app = app
         this.app.on('window-all-closed', this.onWindowAllClosed.bind(this))
-        this.app.on('ready', this.create.bind(this));
-        this.app.on('activate', this.onActivated.bind(this));
+        this.app.on('ready', this.create.bind(this))
+        this.app.on('activate', this.onActivated.bind(this))
     }
 
     private onWindowAllClosed() {
-        this.app.quit();
+        this.app.quit()
     }
 
     private create() {
+        this.mainWindowState = windowStateKeeper({})
+
         this.mainWindow = new BrowserWindow({
-            width: 800,
-            height: 400,
+            x: this.mainWindowState.x,
+            y: this.mainWindowState.y,
+            width: this.mainWindowState.width,
+            height: this.mainWindowState.height,
             minWidth: 500,
             minHeight: 250,
             acceptFirstMouse: true,
@@ -29,26 +35,27 @@ class TimerApp {
                 nodeIntegration: true
             },
             alwaysOnTop: true,
-        });
+        })
 
-        this.mainWindow.loadURL(this.mainURL);
+        this.mainWindow.loadURL(this.mainURL)
+        this.mainWindowState.manage(this.mainWindow)
 
         this.mainWindow.webContents.openDevTools({
             mode: 'detach',
         })
 
         this.mainWindow.on('closed', () => {
-            this.mainWindow = null;
-        });
+            this.mainWindow = null
+        })
     }
 
     private onReady() {
-        this.create();
+        this.create()
     }
 
     private onActivated() {
         if (this.mainWindow === null) {
-            this.create();
+            this.create()
         }
     }
 }
