@@ -57,8 +57,29 @@ export default class App extends React.Component<Props, State> {
         this.setState({time: this.secToTime(sec)})
     }
 
+    addPreset() {
+        this.setState({
+            presets: [
+                ...this.state.presets,
+                this.timeToSec(this.state.time)
+            ]
+        })
+    }
+
+    setPreset(index: number) {
+        this.setState({
+            time: this.secToTime(this.state.presets[index])
+        })
+    }
+
+    removePreset(index: number) {
+        this.setState({
+            presets: this.state.presets.filter((v, i) => i != index)
+        })
+    }
+
     render(): JSX.Element {
-        console.log(this.state.time)
+        console.log(this.state.presets)
         return (
             <Grid padded={false}>
                 <Grid.Row columns={1} centered>
@@ -97,7 +118,7 @@ export default class App extends React.Component<Props, State> {
                         <Button content='Start' color='green' />
                         <Button content='Stop' color='orange' />
                         <Button content='Reset' color='red' />
-                        <Button content='Add Preset' color='blue'/>
+                        <Button onClick={() => this.addPreset()} content='Add Preset' color='blue'/>
                     </Button.Group>
                 </Grid.Row>
 
@@ -105,16 +126,17 @@ export default class App extends React.Component<Props, State> {
                     <Grid.Column>
                         <Table striped unstackable>
                             <Table.Body>
-                                {this.state.presets.map((preset: number) => {
-                                <Table.Row>
-                                    <Table.Cell>
-                                        {preset}
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>
-                                        <Button color='blue' circular icon={{name: 'add'}} />
-                                        <Button color='red' circular icon={{name: 'minus'}} />
-                                    </Table.Cell>
-                                </Table.Row>
+                                {this.state.presets.map((preset: number, index: number) => {
+                                    const time = this.secToTime(preset)
+                                    return <Table.Row>
+                                        <Table.Cell>
+                                            {`${time.hour}:${('0' + time.min).slice(-2)}:${('0' + time.sec).slice(-2)}`}
+                                        </Table.Cell>
+                                        <Table.Cell textAlign='right'>
+                                            <Button onClick={() => this.setPreset(index)} color='blue' circular icon={{name: 'add'}} />
+                                            <Button onClick={() => this.removePreset(index)} color='red' circular icon={{name: 'minus'}} />
+                                        </Table.Cell>
+                                    </Table.Row>
                                 })}
                             </Table.Body>
                         </Table>
